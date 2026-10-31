@@ -52,6 +52,11 @@ function updateAim() {
 const STEP = 1 / 60;
 let last = performance.now(), acc = 0, fpsT = 0, frames = 0;
 function loop(now) {
+  // ошибка в одном кадре не должна останавливать игру
+  requestAnimationFrame(loop);
+  try { frame(now); } catch (e) { console.error(e); }
+}
+function frame(now) {
   let dt = (now - last) / 1000; last = now;
   if (dt > 0.25) dt = 0.25;
   acc += dt;
@@ -71,7 +76,6 @@ function loop(now) {
     if (!el.classList.contains('hidden')) el.textContent = `${Math.round(frames / fpsT)} FPS · ${view.w}×${view.h} ×${view.scale} · врагов ${G.enemies.length} · частиц ${G.parts.length}`;
     frames = 0; fpsT = 0;
   }
-  requestAnimationFrame(loop);
 }
 
 try { boot(); } catch (e) {

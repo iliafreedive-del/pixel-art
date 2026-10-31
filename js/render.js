@@ -330,7 +330,8 @@ function drawGround(lights) {
 
 function frameOf(set, anim, t) {
   const arr = set.anims[anim] || set.anims.idle;
-  return arr[Math.floor(t) % arr.length];
+  const i = Math.floor(t) || 0;
+  return arr[((i % arr.length) + arr.length) % arr.length];
 }
 
 function drawProp(pr, x, y) {
@@ -413,7 +414,7 @@ function drawAlly(a, x, y) {
 function drawPlayer(P, x, y) {
   const set = SPR[CLASSES[G.save.cls].sprite];
   let anim = 'idle', t = P.animT * 5;
-  if (P.atkT > 0) { anim = 'atk'; t = (1 - P.atkT / 0.26) * 3.99; }
+  if (P.atkT > 0) { anim = 'atk'; t = clamp(1 - P.atkT / (P.atkMax || 0.26), 0, 0.99) * 4; }
   else if (P.moving || P.dash) { anim = 'walk'; t = P.animT * 11; }
   if (P.jump) { anim = 'atk'; t = 0; }
   let flip = P.face < 0;

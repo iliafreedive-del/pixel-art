@@ -173,7 +173,7 @@ const CAST = {
     const [dx, dy] = aimDir(P);
     const ang = Math.atan2(dy, dx);
     P.swing = (P.swing || 0) + 1;
-    P.atkT = 0.26; P.anim = 'atk'; P.animT = 0;
+    P.atkT = P.atkMax = 0.26; P.anim = 'atk'; P.animT = 0;
     const full = has(m, 0);
     const r = 1.7 * (has(m, 0, 2) ? 1.3 : 1);
     const arc = full ? Math.PI : 1.1;
@@ -250,7 +250,7 @@ const CAST = {
   // ─── Пиромантка
   firebolt(P, m) {
     const [dx, dy] = aimDir(P);
-    P.atkT = 0.22; P.anim = 'atk'; P.animT = 0;
+    P.atkT = P.atkMax = 0.22; P.anim = 'atk'; P.animT = 0;
     sfx('fire', 0.06);
     const pierce = has(m, 1) ? 99 : 0;
     const speed = has(m, 1, 2) ? 18 : 13;
@@ -280,7 +280,7 @@ const CAST = {
   meteor(P, m) {
     const [dx, dy, l] = aimDir(P);
     const tx = P.x + dx * Math.min(9, l), ty = P.y + dy * Math.min(9, l);
-    P.atkT = 0.3; P.anim = 'atk'; P.animT = 0;
+    P.atkT = P.atkMax = 0.3; P.anim = 'atk'; P.animT = 0;
     const ice = has(m, 2);
     const fall = (x, y, r, dmg, delay) => {
       if (G.map.at(Math.floor(x), Math.floor(y)) !== FLOOR) return;
@@ -367,7 +367,7 @@ const CAST = {
   // ─── Охотница
   arrow(P, m) {
     const [dx, dy] = aimDir(P);
-    P.atkT = 0.2; P.anim = 'atk'; P.animT = 0;
+    P.atkT = P.atkMax = 0.2; P.anim = 'atk'; P.animT = 0;
     sfx('shoot', 0.05);
     const n = has(m, 0, 2) ? 5 : has(m, 0) ? 3 : 1;
     const base = Math.atan2(dy, dx);
