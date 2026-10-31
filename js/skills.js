@@ -131,6 +131,11 @@ export function fireZone(x, y, r, dur, dps, o = {}) {
     kind: 'zone', ground: true, x, y, r, t: dur, max: dur, tick: 0, color: o.color || '#ff8a3a',
     update(dt) {
       this.t -= dt; this.tick -= dt;
+      if (o.poison && Math.random() < r * dt * 10) {
+        // клубы ядовитого тумана
+        const a = Math.random() * TAU, d = Math.sqrt(Math.random()) * r * 0.9;
+        addPart({ x: x + Math.cos(a) * d, y: y + Math.sin(a) * d, z: rand(0, 6), vx: rand(-0.3, 0.3), vy: rand(-0.3, 0.3), vz: rand(2, 6), g: 0, life: rand(0.8, 1.4), max: 1.4, size: 4, color: 'rgba(120,255,80,0.35)', add: true, puff: true });
+      }
       if (Math.random() < r * dt * 18) addPart({ x: x + rand(-r, r) * 0.8, y: y + rand(-r, r) * 0.8, z: 0, vx: 0, vy: 0, vz: rand(12, 30), g: -10, life: rand(0.3, 0.7), max: 0.7, size: Math.random() < 0.3 ? 2 : 1, color: Math.random() < 0.5 ? (o.c2 || '#ffd060') : this.color, add: true });
       G.lights.push({ x, y, z: 0, r: 26 + r * 14, c: o.light || [255, 140, 60], i: 0.7 });
       if (this.tick <= 0) {
@@ -490,7 +495,7 @@ const CAST = {
             query(hx, hy, 1.1, (e) => hitEnemy(e, m.dmg * 2.5, { stun: has(m, 2, 3) ? 0.5 : 0, kx: 0, ky: 0 }));
             sfx('zap', 0.08);
           } else {
-            G.fx.push({ kind: 'arrowFall', x: hx, y: hy, t: 0.15, max: 0.15, update(dt) { this.t -= dt; if (this.t <= 0) { burstParts(hx, hy, 3, '#e8dcc0', 1.5); query(hx, hy, 0.7, (e) => hitEnemy(e, m.dmg, { kx: 0, ky: 0, knock: 0.1 })); return false; } return true; } });
+            G.fx.push({ kind: 'arrowFall', x: hx, y: hy, t: 0.15, max: 0.15, update(dt) { this.t -= dt; if (this.t <= 0) { burstParts(hx, hy, 4, '#d8f4ff', 1.5, true); G.lights.push({ x: hx, y: hy, z: 0, r: 20, c: [190, 240, 255], i: 0.6 }); query(hx, hy, 0.7, (e) => hitEnemy(e, m.dmg, { kx: 0, ky: 0, knock: 0.1 })); return false; } return true; } });
           }
         }
         return this.t > 0;

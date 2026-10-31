@@ -307,15 +307,20 @@ function drawGround(lights) {
       ctx.globalAlpha = 1;
     } else if (f.kind === 'zone') {
       const k = Math.min(1, f.t / 0.5);
-      ctx.globalAlpha = 0.3 * k;
+      const pulse = 0.85 + Math.sin(G.time * 5 + f.x) * 0.15;
+      ctx.globalAlpha = (f.color === '#ff8a3a' ? 0.3 : 0.38) * k * pulse;
       ctx.fillStyle = f.color === '#ff8a3a' ? '#6a1a04' : f.color;
       isoEllipse(ctx, f.x, f.y, f.r); ctx.fill();
+      ctx.globalAlpha = 0.7 * k; ctx.strokeStyle = f.color; ctx.lineWidth = 1;
+      isoEllipse(ctx, f.x, f.y, f.r); ctx.stroke();
       ctx.globalAlpha = 1;
     } else if (f.kind === 'trap') {
       ctx.drawImage(trapSpr, sx(f.x, f.y) - 7, sy(f.x, f.y) - 4);
       if (f.arm <= 0 && (G.time * 4 | 0) % 2) { ctx.fillStyle = f.color; ctx.fillRect(sx(f.x, f.y), sy(f.x, f.y) - 1, 1, 1); }
     } else if (f.kind === 'rain') {
-      ctx.globalAlpha = 0.5; ctx.strokeStyle = f.color;
+      ctx.globalAlpha = 0.18; ctx.fillStyle = f.color;
+      isoEllipse(ctx, f.x, f.y, f.r); ctx.fill();
+      ctx.globalAlpha = 0.7; ctx.strokeStyle = f.color;
       isoEllipse(ctx, f.x, f.y, f.r); ctx.stroke(); ctx.globalAlpha = 1;
     }
   }
@@ -443,6 +448,7 @@ function drawGlow() {
       ctx.globalAlpha = a;
       ctx.fillStyle = p.color;
       if (p.flashP) { ctx.drawImage(glowFor('#ffffff', 8), x - 8, y - 14, 16, 16); continue; }
+      if (p.puff) { const r = 6 + (1 - p.life / p.max) * 6; ctx.globalAlpha = a * 0.5; ctx.drawImage(glowFor('#60ff40', 12), x - r, y - r * 0.7, r * 2, r * 1.4); continue; }
       ctx.fillRect(x, y, p.size, p.size);
     }
   }
@@ -523,7 +529,9 @@ function drawGlow() {
     } else if (f.kind === 'arrowFall') {
       const k = f.t / f.max, x = sx(f.x, f.y), y = sy(f.x, f.y);
       ctx.globalAlpha = 1; ctx.strokeStyle = '#e8f4ff'; ctx.lineWidth = 1;
-      ctx.beginPath(); ctx.moveTo(x - 2, y - 8 - k * 40); ctx.lineTo(x, y - k * 40); ctx.stroke();
+      ctx.beginPath(); ctx.moveTo(x - 3, y - 12 - k * 60); ctx.lineTo(x, y - k * 60); ctx.stroke();
+      ctx.fillStyle = '#ffffff'; ctx.fillRect(x, Math.round(y - k * 60), 1, 1);
+      ctx.globalAlpha = 0.5; ctx.drawImage(glowFor('#bff4ff', 6), x - 6, y - k * 60 - 6);
     } else if (f.kind === 'zone' || f.kind === 'tele') {
       // свечение у края
       ctx.globalAlpha = 0.18; ctx.strokeStyle = f.color; ctx.lineWidth = 1;

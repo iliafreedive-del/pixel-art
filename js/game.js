@@ -889,7 +889,10 @@ export function update(dt) {
   rebuildGrid();
   updateAllies(dt);
   updateProjs(dt);
-  G.fx = G.fx.filter((f) => f.update(dt) !== false);
+  // эффекты могут порождать новые эффекты (взрыв → кольцо, капкан → облако) — не теряем их
+  const cur = G.fx; G.fx = [];
+  const keep = cur.filter((f) => f.update(dt) !== false);
+  G.fx = keep.concat(G.fx);
   updatePickups(dt);
   updateParts(dt);
   for (const ob of G.objs) if (ob.type === 'ritual') updateRitual(ob, dt);
