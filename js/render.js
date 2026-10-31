@@ -183,7 +183,13 @@ export function render(dt) {
       ctx.globalAlpha = a;
       ctx.drawImage(img, it.x - HW, it.y - hgt);
       ctx.globalAlpha = 1;
-    } else if (it.t === 1) drawProp(it.o, it.x, it.y);
+    } else if (it.t === 1) {
+      // высокий предмет перед героем — полупрозрачный
+      const tallP = it.o.kind === 'pillar' || it.o.kind === 'obelisk' || it.o.kind === 'pillarBroken';
+      if (tallP && it.d > pd && Math.abs(it.x - psx) < 16 && it.y > psy - 4 && it.y - 56 < psy) ctx.globalAlpha = 0.4;
+      drawProp(it.o, it.x, it.y);
+      ctx.globalAlpha = 1;
+    }
     else if (it.t === 2) drawEnemy(it.o, it.x, it.y);
     else if (it.t === 3) drawAlly(it.o, it.x, it.y);
     else drawPlayer(P, it.x, it.y);
@@ -242,7 +248,7 @@ function eliteColor(e) {
 }
 
 // круг в изометрии
-function isoEllipse(c, x, y, r) { c.beginPath(); c.ellipse(sx(x, y), sy(x, y), r * HW * 1.414, r * HH * 1.414, 0, 0, TAU); }
+function isoEllipse(c, x, y, r) { r = Math.max(0.02, r); c.beginPath(); c.ellipse(sx(x, y), sy(x, y), r * HW * 1.414, r * HH * 1.414, 0, 0, TAU); }
 
 function drawGround(lights) {
   // тени
@@ -254,7 +260,7 @@ function drawGround(lights) {
     if (!e.obelisk) ctx.drawImage(shadowSpr, x - w / 2, y - w / 4, w, w / 2);
     // замах — предупреждение
     if (e.state === 'windup') {
-      const k = 1 - e.t / (e.ai === 'exploder' ? 0.6 : e.def.heavy ? 0.65 : 0.38);
+      const k = clamp(1 - e.t / (e.wd || 0.4), 0, 1);
       ctx.globalAlpha = 0.25 + k * 0.4;
       ctx.fillStyle = '#ff2a20';
       const r = e.ai === 'exploder' ? 1.8 : e.isBoss ? e.def.range + 1 : e.def.range * 0.9 + e.r;
@@ -353,15 +359,18 @@ function drawProp(pr, x, y) {
 function drawEnemy(e, x, y) {
   if (e.obelisk) {
     const img = G.map.art.props.obelisk;
+    const P = G.player;
+    if (e.x + e.y > P.x + P.y && Math.abs(x - sx(P.x, P.y)) < 16 && y > sy(P.x, P.y) - 4 && y - 50 < sy(P.x, P.y)) ctx.globalAlpha = 0.4;
     const fl = e.flash > 0;
     ctx.drawImage(img, x - 12, y - 49);
-    if (fl) { ctx.globalCompositeOperation = 'lighter'; ctx.globalAlpha = 0.6; ctx.drawImage(img, x - 12, y - 49); ctx.globalAlpha = 1; ctx.globalCompositeOperation = 'source-over'; }
+    if (fl) { ctx.globalCompositeOperation = 'lighter'; ctx.globalAlpha = 0.6; ctx.drawImage(img, x - 12, y - 49); ctx.globalCompositeOperation = 'source-over'; }
+    ctx.globalAlpha = 1;
     return;
   }
   const set = SPR[e.sprite];
   if (!set) return;
   let anim = 'idle', t = e.animT * 4;
-  if (e.state === 'windup') { anim = 'atk'; const dur = e.isBoss ? 0.6 : e.ai === 'exploder' ? 0.6 : e.def.heavy ? 0.65 : e.ai === 'ranged' ? 0.5 : 0.38; t = (1 - e.t / dur) * (set.anims.atk.length - 1); }
+  if (e.state === 'windup') { anim = 'atk'; t = clamp(1 - e.t / (e.wd || 0.4), 0, 1) * (set.anims.atk.length - 1); }
   else if (e.active && (e.moving || e.ai === 'ranged')) { anim = 'walk'; t = e.animT * e.speed * 3; }
   e.moving = false;
   const fr = frameOf(set, anim, t);

@@ -350,8 +350,8 @@ export function buildAllSprites() {
   const eyeV = col('#d6b4ff'), eyeY = col('#ffe066'), eyeR = col('#ff5040'), eyeC = col('#8ff8ff');
   // ГЕРОИ
   C.warrior = humanoid({
-    head: 'helm', eye: col('#ffb24a'), weapon: 'sword', bulk: 1.15,
-    bladeGlow: col('#ffd08a'), horns: ramp('#e8dcc0', 4),
+    head: 'helm', eye: col('#ffb24a'), weapon: 'sword', bulk: 1.15, scale: 1.2,
+    bladeGlow: col('#ffd08a'),
     R: {
       helm: ramp('#6c7390'), plume: ramp('#c8332e'), body: ramp('#4a4f68'), body2: ramp('#6e3a24'),
       leg: ramp('#3a3448'), boot: ramp('#3e2a22'), arm: ramp('#5a6080'), hand: ramp('#7a8098'),
@@ -361,7 +361,7 @@ export function buildAllSprites() {
     opt: { rimColor: col('#ffcf9a'), rimT: 0.45 },
   });
   C.mage = humanoid({
-    head: 'hair', fireHair: true, eye: col('#ffffff'), weapon: 'staff', cast: true, torsoK: 1.1,
+    head: 'hair', fireHair: true, eye: col('#ffffff'), weapon: 'staff', cast: true, torsoK: 1.1, scale: 1.2,
     R: {
       face: ramp('#e8b896'), hair: ramp('#ff7a2a', 5, 0.55, 0.6), body: ramp('#3b2a5e'), body2: ramp('#2a8a7a'),
       leg: ramp('#2a2040'), boot: ramp('#2a1a2a'), arm: ramp('#46306e'), hand: ramp('#e8b896'),
@@ -371,7 +371,7 @@ export function buildAllSprites() {
     opt: { rimColor: col('#ffc890'), rimT: 0.45 },
   });
   C.hunter = humanoid({
-    head: 'hood', eye: col('#bff4ff'), weapon: 'bow', arrowCol: col('#d8f4ff'),
+    head: 'hood', eye: col('#bff4ff'), weapon: 'bow', arrowCol: col('#d8f4ff'), scale: 1.2,
     R: {
       hood: ramp('#2c7a6a'), face: ramp('#c89a80'), body: ramp('#24564e'), body2: ramp('#6a4a30'),
       leg: ramp('#2a3438'), boot: ramp('#4a3424'), arm: ramp('#2c6a5e'), hand: ramp('#c89a80'),

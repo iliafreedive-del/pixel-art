@@ -64,7 +64,7 @@ export function startArea(index) {
   bakeFloor(map);
   G.map = map;
   G.enemies = []; G.projs = []; G.fx = []; G.parts = []; G.texts = []; G.pickups = []; G.allies = []; G.objs = [];
-  G.portal = null; G.boss = null; G.kills = 0; G.runTime = 0; G.spawnT = 6; G.msgs = [];
+  G.portal = null; G.boss = null; G.vacuum = false; G.cam.init = false; G.kills = 0; G.runTime = 0; G.spawnT = 6; G.msgs = [];
   G.mlvl = area.lvl + Math.max(0, hero().level - area.lvl - 2) * 0.5; // уровень монстров
   const start = map.rooms[0];
   const st = stats();
@@ -633,11 +633,11 @@ function updateEnemies(dt) {
     const range = e.def.range;
     if (e.ai === 'ranged') {
       const sight = d < range + 1 && los(map, e.x, e.y, tx, ty);
-      if (sight && e.atkCd <= 0) { e.state = 'windup'; e.t = 0.5; e.face = tx > e.x - ty + e.y ? 1 : -1; }
+      if (sight && e.atkCd <= 0) { e.state = 'windup'; e.t = e.wd = 0.5; e.face = tx > e.x - ty + e.y ? 1 : -1; }
       else if (d < 3.5 && sight) moveE(e, e.x - tx, e.y - ty, spd * 0.8, dt);
       else if (!sight || d > range - 1) chase(e, tx, ty, d, spd, dt);
     } else {
-      if (d < range && e.atkCd <= 0) { e.state = 'windup'; e.t = e.ai === 'exploder' ? 0.6 : e.def.heavy ? 0.65 : 0.38; }
+      if (d < range && e.atkCd <= 0) { e.state = 'windup'; e.t = e.wd = e.ai === 'exploder' ? 0.6 : e.def.heavy ? 0.65 : 0.38; }
       else if (d > range * 0.8) chase(e, tx, ty, d, spd, dt);
     }
     collideE(e);
@@ -702,7 +702,7 @@ function bossAI(e, dt, tx, ty, d, spd) {
     if (e.t <= 0) { e.state = 'chase'; e.atkCd = 1.4; if (dist(e.x, e.y, P.x, P.y) < e.def.range + 1) hurtPlayer(e.dmg, e); G.shake = 0.3; sfx('hit'); }
     return;
   }
-  if (d < e.def.range && e.atkCd <= 0) { e.state = 'windup'; e.t = 0.6; return; }
+  if (d < e.def.range && e.atkCd <= 0) { e.state = 'windup'; e.t = e.wd = 0.6; return; }
   if (e.boss === undefined) e.boss = e.def.boss;
   const b = e.def.boss;
   if (b === 'shepherd') {

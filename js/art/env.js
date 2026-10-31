@@ -5,17 +5,17 @@ import { hash2, mulberry32 } from '../util.js';
 export const BIOMES = {
   crypt: {
     name: 'Склеп', floor: '#4f5a5c', floor2: '#3c4648', grout: '#1c2224', accent: '#4af0cc',
-    wall: '#4a5254', wallTop: '#262c30', moss: '#3a5a3a', ambient: [96, 108, 122], fog: [40, 70, 72],
+    wall: '#4a5254', wallTop: '#262c30', moss: '#3a5a3a', ambient: [78, 90, 106], fog: [40, 70, 72],
     void: '#07090c', particles: 'dust', light: [255, 196, 140],
   },
   forge: {
     name: 'Горнило', floor: '#56443a', floor2: '#3e302a', grout: '#1a1210', accent: '#ff9a3c',
-    wall: '#4a3a32', wallTop: '#22181a', moss: '#7a2a10', ambient: [112, 82, 72], fog: [90, 40, 20],
+    wall: '#4a3a32', wallTop: '#22181a', moss: '#7a2a10', ambient: [96, 68, 60], fog: [90, 40, 20],
     void: '#0c0605', particles: 'embers', light: [255, 170, 100],
   },
   frost: {
     name: 'Бездна', floor: '#4c5a74', floor2: '#36405a', grout: '#141a2a', accent: '#b48cff',
-    wall: '#4a5470', wallTop: '#20243a', moss: '#a8d8f0', ambient: [88, 92, 132], fog: [60, 50, 110],
+    wall: '#4a5470', wallTop: '#20243a', moss: '#a8d8f0', ambient: [72, 76, 114], fog: [60, 50, 110],
     void: '#06060e', particles: 'snow', light: [200, 210, 255],
   },
 };

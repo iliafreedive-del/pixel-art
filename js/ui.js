@@ -147,7 +147,7 @@ export function showMenu() {
           <div class="name">${C.name}</div>
           <div class="stat">Уровень: <b>${h.level}</b> · ${C.title}</div>
           <div class="stat">Здоровье: <b>${st}</b> · Скорость: <b>${Math.round(C.speed * 50)}</b></div>
-          <div class="stat">Закалка: <b>${up}</b> · Пройдено: <b>${h.progress}/${AREAS.length}</b></div>
+          <div class="stat s">Закалка: <b>${up}</b> · Пройдено: <b>${h.progress}/${AREAS.length}</b></div>
           <div class="weap"><img class="px" src="${icon(sk.icon, sk.color)}"><span>Оружие:<br><b>${sk.name}</b></span></div>
           <div class="lore">${C.lore}</div>
         </div>
